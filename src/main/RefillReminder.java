@@ -14,6 +14,11 @@ public class RefillReminder {
     public void scheduleReminder() {
         // calculate the date for a two-week warning
         LocalDate warningDate = medication.getStartDate().plusDays(medication.getDaySupply() - 14);
+        LocalDate reminderDate = endDate.minusWeeks(2);
+
+        if (LocalDate.now().isAfter(reminderDate) || LocalDate.now().isEqual(reminderDate)) {
+            System.out.println("Reminder: You need to refill your prescription in two weeks.");
+
         // schedule a task to notify the user for two weeks before they run out of meds
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

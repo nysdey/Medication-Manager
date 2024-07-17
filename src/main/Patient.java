@@ -54,5 +54,37 @@ public class Patient {
         System.out.println();
     }
 
-
+    public String getFullName() {
+        return fullName;
+    }
+    public double getWeight() {
+        return weight;
+    }
+    public double getHeight() {
+        return height;
+    }
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public String getPhoneNumber () {
+        return phoneNumber;
+    }
+    public String getRxNumber() {
+        return rxNumber;
+    }
+    public String getPrescriberName() {
+        return prescriberName;
+    }
+    public String getPrescriberPhoneNumber() {
+        return prescriberPhoneNumber;
+    }
+    public String getPharmacyName() {
+        return pharmacyName;
+    }
+    public String getPharmacyAddress() {
+        return pharmacyAddress;
+    }
 }

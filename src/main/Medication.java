@@ -16,7 +16,7 @@ public class Medication {
         this.brandName = brandName;
         this.genericName = genericName;
         this.prescriptionAmount = prescriptionAmount;
-        this.daySupply= daySupply;
+        this.daySupply = daySupply;
         this.cost = cost;
         this.startDate = startDate;
     }
@@ -43,5 +43,21 @@ public class Medication {
 
     public int getDaySupply() {
         return daySupply;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public String getGenericName() {
+        return genericName;
+    }
+
+    public int getPrescriptionAmount() {
+        return prescriptionAmount;
+    }
+
+    public double getCost() {
+        return cost;
     }
 }

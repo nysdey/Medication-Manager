@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,91 +21,94 @@ class MedicationApp {
             phoneNumberField, rxNumberField, prescriberNameField, prescriberPhoneNumberField, pharmacyNameField, pharmacyAddressField;
     private JTextField brandNameField, genericNameField, prescriptionAmountField, daySupplyField, costField, startDateField;
     private JTextArea outputArea;
+    private Medication medication;
+    private Timer countdown;
 
     public void createAndShowGUI() {
         // initialize the main frame
         frame = new JFrame("Medication Manager");
         frame.setSize(500, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        // create a container to hold the components
-        Container container = frame.getContentPane();
-        container.setLayout(new GridLayout(0, 2));
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(0, 2, 10, 10));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // add patient input fields and labels
-        container.add(new JLabel("Full Name: "));
+        inputPanel.add(new JLabel("Full Name: "));
         fullNameField = new JTextField();
-        container.add(fullNameField);
+        inputPanel.add(fullNameField);
 
-        container.add(new JLabel("Weight: "));
+        inputPanel.add(new JLabel("Weight: "));
         weightField = new JTextField();
-        container.add(weightField);
+        inputPanel.add(weightField);
 
-        container.add(new JLabel("Height: "));
+        inputPanel.add(new JLabel("Height: "));
         heightField = new JTextField();
-        container.add(heightField);
+        inputPanel.add(heightField);
 
-        container.add(new JLabel("Date of Birth (YYYY-MM-DD): "));
+        inputPanel.add(new JLabel("Date of Birth (YYYY-MM-DD): "));
         dateOfBirthField = new JTextField();
-        container.add(dateOfBirthField);
+        inputPanel.add(dateOfBirthField);
 
-        container.add(new JLabel("Address: "));
+        inputPanel.add(new JLabel("Address: "));
         addressField = new JTextField();
-        container.add(addressField);
+        inputPanel.add(addressField);
 
-        container.add(new JLabel("Phone Number: "));
+        inputPanel.add(new JLabel("Phone Number: "));
         phoneNumberField = new JTextField();
-        container.add(phoneNumberField);
+        inputPanel.add(phoneNumberField);
 
-        container.add(new JLabel("Rx Number: "));
+        inputPanel.add(new JLabel("Rx Number: "));
         rxNumberField = new JTextField();
-        container.add(rxNumberField);
+        inputPanel.add(rxNumberField);
 
-        container.add(new JLabel("Prescriber Name: "));
+        inputPanel.add(new JLabel("Prescriber Name: "));
         prescriberNameField = new JTextField();
-        container.add(prescriberNameField);
+        inputPanel.add(prescriberNameField);
 
-        container.add(new JLabel("Prescriber Phone Number: "));
+        inputPanel.add(new JLabel("Prescriber Phone Number: "));
         prescriberPhoneNumberField = new JTextField();
-        container.add(prescriberPhoneNumberField);
+        inputPanel.add(prescriberPhoneNumberField);
 
-        container.add(new JLabel("Pharmacy Name: "));
+        inputPanel.add(new JLabel("Pharmacy Name: "));
         pharmacyNameField = new JTextField();
-        container.add(pharmacyNameField);
+        inputPanel.add(pharmacyNameField);
 
-        container.add(new JLabel("Pharmacy Address: "));
+        inputPanel.add(new JLabel("Pharmacy Address: "));
         pharmacyAddressField = new JTextField();
-        container.add(pharmacyAddressField);
+        inputPanel.add(pharmacyAddressField);
 
         // add medication info
-        container.add(new JLabel("Brand Name: "));
+        inputPanel.add(new JLabel("Brand Name: "));
         brandNameField = new JTextField();
-        container.add(brandNameField);
+        inputPanel.add(brandNameField);
 
-        container.add(new JLabel("Generic Name: "));
+        inputPanel.add(new JLabel("Generic Name: "));
         genericNameField = new JTextField();
-        container.add(genericNameField);
+        inputPanel.add(genericNameField);
 
-        container.add(new JLabel("Prescription Amount: "));
+        inputPanel.add(new JLabel("Prescription Amount: "));
         prescriptionAmountField = new JTextField();
-        container.add(prescriptionAmountField);
+        inputPanel.add(prescriptionAmountField);
 
-        container.add(new JLabel("Day Supply: "));
+        inputPanel.add(new JLabel("Day Supply: "));
         daySupplyField = new JTextField();
-        container.add(daySupplyField);
+        inputPanel.add(daySupplyField);
 
-        container.add(new JLabel("Cost: "));
+        inputPanel.add(new JLabel("Cost: "));
         costField = new JTextField();
-        container.add(costField);
+        inputPanel.add(costField);
 
-        container.add(new JLabel("Start Date: (YYYY-MM-DD): "));
+        inputPanel.add(new JLabel("Start Date: (YYYY-MM-DD): "));
         startDateField = new JTextField();
-        container.add(startDateField);
+        inputPanel.add(startDateField);
 
         // add output area for displaying patient and medication info
         outputArea = new JTextArea();
         outputArea.setEditable(false);
-        container.add(new JScrollPane(outputArea));
+        inputPanel.add(new JScrollPane(outputArea));
 
         // add a submit button and its action listener
         JButton submitButton = new JButton("Submit");
@@ -113,8 +118,10 @@ class MedicationApp {
                 handleSubmit();
             }
         });
-        container.add(submitButton);
+        inputPanel.add(submitButton);
 
+        frame.add(inputPanel, BorderLayout.CENTER);
+        frame.add(submitButton, BorderLayout.SOUTH);
         // make the frame visible
         frame.setVisible(true);
     }
@@ -150,42 +157,67 @@ class MedicationApp {
             Medication medication = new Medication(brandName, genericName, prescriptionAmount, daySupply,
                     cost, startDate);
 
-            // display the collected information in the output area
-            outputArea.setText("");
-            outputArea.append("Patient Information: \n");
-            outputArea.append("Full Name: " + fullName + "\n");
-            outputArea.append("Weight: " + weight + "\n");
-            outputArea.append("Height: " + height + "\n");
-            outputArea.append("Date of Birth: " + dateOfBirth + "\n");
-            outputArea.append("Address: " + address + "\n");
-            outputArea.append("Phone Number: " + phoneNumber + "\n");
-            outputArea.append("Rx Number: " + rxNumber + "\n");
-            outputArea.append("Height: " + height + "\n");
-            outputArea.append("Prescriber Name: " + prescriberName + "\n");
-            outputArea.append("Prescriber Phone Number: " + prescriberPhoneNumber + "\n");
-            outputArea.append("Pharmacy Name: " + pharmacyName + "\n");
-            outputArea.append("Pharmacy Address: " + pharmacyAddress + "\n");
-            outputArea.append("\n");
-            outputArea.append("Medication Information: \n");
-            outputArea.append("Brand Name: " + brandName + "\n");
-            outputArea.append("Generic Name: " + genericName + "\n");
-            outputArea.append("Prescription Amount: " + prescriptionAmount + "mg \n");
-            outputArea.append("Day Supply: " + daySupply + "\n");
-            outputArea.append("Cost: $" + cost + "\n");
-            outputArea.append("Start Date: " + startDate + "\n");
+            frame.getContentPane().removeAll();
+            displayNonEditableInfo(patient, medication);
+            frame.revalidate();
+            frame.repaint();
+            startCountdown();
 
-            // add a refill reminder
-            RefillReminder reminder = new RefillReminder(medication);
-            reminder.scheduleReminder();
         } catch (NumberFormatException e) {
-            outputArea.setText("Error: Invalid number format. Please check weight, height, day supply, and cost.");
+            JOptionPane.showMessageDialog(frame,"Error: Invalid number format. Please check weight, " +
+                    "height, day supply, and cost.");
         } catch (DateTimeParseException e) {
-            outputArea.setText("Error: Invalid date format. Please use YYYY-MM-DD.");
+            JOptionPane.showMessageDialog(frame, "Error: Invalid date format. Please use YYYY-MM-DD.");
         } catch (Exception e) {
-            outputArea.setText("Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage());
         }
 
     }
+
+    private void displayNonEditableInfo(Patient patient, Medication medication) {
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridLayout(0, 1, 10, 10));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        infoPanel.add(new JLabel("Patient Information: \n"));
+        infoPanel.add(new JLabel("Full Name: " + patient.getFullName() + "\n"));
+        infoPanel.add(new JLabel("Weight: " + patient.getWeight() + "\n"));
+        infoPanel.add(new JLabel("Height: " + patient.getHeight() + "\n"));
+        infoPanel.add(new JLabel("Date of Birth: " + patient.getDateOfBirth() + "\n"));
+        infoPanel.add(new JLabel("Address: " + patient.getAddress() + "\n"));
+        infoPanel.add(new JLabel("Phone Number: " + patient.getPhoneNumber() + "\n"));
+        infoPanel.add(new JLabel("Rx Number: " + patient.getRxNumber() + "\n"));
+        infoPanel.add(new JLabel("Height: " + patient.getHeight() + "\n"));
+        infoPanel.add(new JLabel("Prescriber Name: " + patient.getPrescriberName() + "\n"));
+        infoPanel.add(new JLabel("Prescriber Phone Number: " + patient.getPrescriberPhoneNumber() + "\n"));
+        infoPanel.add(new JLabel("Pharmacy Name: " + patient.getPharmacyName() + "\n"));
+        infoPanel.add(new JLabel("Pharmacy Address: " + patient.getAddress() + "\n"));
+        infoPanel.add(new JLabel("\n"));
+        infoPanel.add(new JLabel("Medication Information: \n"));
+        infoPanel.add(new JLabel("Brand Name: " + medication.getBrandName() + "\n"));
+        infoPanel.add(new JLabel("Generic Name: " + medication.getGenericName() + "\n"));
+        infoPanel.add(new JLabel("Prescription Amount: " + medication.getPrescriptionAmount() + "mg \n"));
+        infoPanel.add(new JLabel("Day Supply: " + medication.getDaySupply() + "\n"));
+        infoPanel.add(new JLabel("Cost: $" + medication.getCost() + "\n"));
+        infoPanel.add(new JLabel("Start Date: " + medication.getStartDate() + "\n"));
+    }
+
+    private void startCountdown() {
+        Timer countdownTimer = new Timer(true);
+        countdownTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(() -> updateDaysLeft());
+            }
+        }, 0, 1000 * 60 * 60 * 24);
+    }
+
+    private void updateDaysLeft() {
+        outputArea.setText("Days Left: " + medication.daysLeft());
+    }
+
+        // add a refill reminder
+        RefillReminder reminder = new RefillReminder(medication);
+        RefillReminder.scheduleReminder();
+
+    }
 }
-
-
